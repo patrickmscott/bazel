@@ -45,16 +45,6 @@ def main():
         # Likely not installed
         install(bazelisk)
 
-    # Cleanup ci.bazelrc if it was copied over from a previous run. It will be replaced below if
-    # this is another CI run.
-    circ = "ci.bazelrc"
-    if os.path.exists(circ):
-        os.remove(circ)
-    # Under CI we copy additional configs to the root. These are `try-import`ed by .bazelrc. This is
-    # rather tricky but is the only way we can guaranteee all runs of `bazel` use the same cli args.
-    if os.environ.get("CI") == "true":
-        shutil.copyfile(os.path.join(root, "build", circ), os.path.join(root, circ))
-
     # Run with all args, replacing the process
     os.execv(bazelisk, sys.argv)
 

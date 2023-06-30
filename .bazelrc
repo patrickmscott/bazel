@@ -4,16 +4,10 @@ build --action_env=DOCKER_BUILDKIT=1
 # Disable symlinks
 build --symlink_prefix=/
 
-# Build go without cgo support
-build --@io_bazel_rules_go//go/config:pure
-
 # Set stable and volatile workspace variables. These can be referenced by rules
 # to stamp artifacts (like docker tags).
-build --workspace_status_command build/status
+build --workspace_status_command build/status.sh
 build --stamp
 
 # Output test errors to the console
 test --test_output=errors
-
-# Try to import ci overrides (only works when CI=true)
-try-import ci.bazelrc

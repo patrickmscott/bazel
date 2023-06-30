@@ -41,6 +41,47 @@ go_deps()
 
 gazelle_dependencies()
 
+########
+# Python
+########
+
+load("//build/rules:python.bzl", "py3_download")
+
+py3_download(name = "py3")
+
+register_toolchains("@py3//:toolchain")
+
+http_archive(
+    name = "rules_python",
+    sha256 = "ffc7b877c95413c82bfd5482c017edcf759a6250d8b24e82f41f3c8b8d9e287e",
+    strip_prefix = "rules_python-0.19.0",
+    url = "https://github.com/bazelbuild/rules_python/archive/0.19.0.tar.gz",
+)
+
+load("@rules_python//python:pip.bzl", "pip_parse")
+
+http_archive(
+    name = "rules_python_gazelle_plugin",
+    sha256 = "ffc7b877c95413c82bfd5482c017edcf759a6250d8b24e82f41f3c8b8d9e287e",
+    strip_prefix = "rules_python-0.19.0/gazelle",
+    url = "https://github.com/bazelbuild/rules_python/archive/0.19.0.tar.gz",
+)
+
+pip_parse(
+    name = "pip",
+    python_interpreter_target = "@py3//:bin/python3",
+    requirements_lock = "//:requirements.txt",
+)
+
+load("@pip//:requirements.bzl", "install_deps")
+
+# Initialize repositories for all packages in requirements_lock.txt.
+install_deps()
+
+load("@rules_python//gazelle:deps.bzl", _py_gazelle_deps = "gazelle_deps")
+
+_py_gazelle_deps()
+
 ###########################
 # Packaging (tar, zip, etc)
 ###########################
