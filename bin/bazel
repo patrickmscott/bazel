@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+
+import os
+import platform
+import re
+import shutil
+import subprocess
+import sys
+import urllib.request
+
+# renovate: datasource=github-releases depName=bazelbuild/bazelisk
+VERSION = "v1.16.0"
+PATH = "bin/bazelisk"
+URL = "https://github.com/bazelbuild/bazelisk/releases/download"
+
+
+def install(dest: str) -> None:
+    if os.path.exists(dest):
+        os.remove(dest)
+    system = platform.system().lower()
+    machine = platform.machine()
+    if machine == "x86_64":
+        machine = "amd64"
+    urllib.request.urlretrieve(f"{URL}/{VERSION}/bazelisk-{system}-{machine}", dest)
+    os.chmod(dest, 0o755)
+
+
+def main():
+    # Find the root of the bazel workspace. This is to ensure bazelisk is installed to a single
+    # location. Not using chdir so we can keep the current directory when running bazel.
+    root = os.path.abspath(".")
+    while not os.path.exists(os.path.join(root, "WORKSPACE")):
+        if root == "/":
+            raise AssertionError(
+                "No WORKSPACE found, are you running inside a bazel repo?"
+            )
+        root = os.path.dirname(root)
+
+    bazelisk = os.getenv("BAZELISK_PATH", os.path.join(root, PATH))
+    try:
+        version = subprocess.check_output([bazelisk, "version"], text=True)
+        if not re.match(f"^Bazelisk version: {VERSION}\n.*", version):
+            install(bazelisk)
+    except Exception:
+        # Likely not installed
+        install(bazelisk)
+
+    # Cleanup ci.bazelrc if it was copied over from a previous run. It will be replaced below if
+    # this is another CI run.
+    circ = "ci.bazelrc"
+    if os.path.exists(circ):
+        os.remove(circ)
+    # Under CI we copy additional configs to the root. These are `try-import`ed by .bazelrc. This is
+    # rather tricky but is the only way we can guaranteee all runs of `bazel` use the same cli args.
+    if os.environ.get("CI") == "true":
+        shutil.copyfile(os.path.join(root, "build", circ), os.path.join(root, circ))
+
+    # Run with all args, replacing the process
+    os.execv(bazelisk, sys.argv)
+
+
+if __name__ == "__main__":
+    main()
