@@ -12,6 +12,8 @@ main() {
     -prune
   bazel run //build:gazelle
   bazel run //build:buildifier
+  bazel run //:requirements.update
+  bazel run //:gazelle_python_manifest.update
 }
 
 main "$@"

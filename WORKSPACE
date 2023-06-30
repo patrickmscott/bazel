@@ -53,18 +53,18 @@ register_toolchains("@py3//:toolchain")
 
 http_archive(
     name = "rules_python",
-    sha256 = "ffc7b877c95413c82bfd5482c017edcf759a6250d8b24e82f41f3c8b8d9e287e",
-    strip_prefix = "rules_python-0.19.0",
-    url = "https://github.com/bazelbuild/rules_python/archive/0.19.0.tar.gz",
+    sha256 = "84aec9e21cc56fbc7f1335035a71c850d1b9b5cc6ff497306f84cced9a769841",
+    strip_prefix = "rules_python-0.23.1",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.23.1/rules_python-0.23.1.tar.gz",
 )
 
 load("@rules_python//python:pip.bzl", "pip_parse")
 
 http_archive(
     name = "rules_python_gazelle_plugin",
-    sha256 = "ffc7b877c95413c82bfd5482c017edcf759a6250d8b24e82f41f3c8b8d9e287e",
-    strip_prefix = "rules_python-0.19.0/gazelle",
-    url = "https://github.com/bazelbuild/rules_python/archive/0.19.0.tar.gz",
+    sha256 = "84aec9e21cc56fbc7f1335035a71c850d1b9b5cc6ff497306f84cced9a769841",
+    strip_prefix = "rules_python-0.23.1/gazelle",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.23.1/rules_python-0.23.1.tar.gz",
 )
 
 pip_parse(

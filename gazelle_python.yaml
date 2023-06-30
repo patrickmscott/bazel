@@ -435,4 +435,4 @@ manifest:
     wrapt.wrappers: wrapt
   pip_repository:
     name: pip
-integrity: 0b7d07f648c856002ed22b00fab05b35787b9e5096ea26bc50bcbc1c283ed4e3
+integrity: 4a8226f87459ad6320c545ab1666b0049256d4c482ae911f051fb3e3f5b979cf
