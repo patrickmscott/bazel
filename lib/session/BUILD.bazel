@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "session",
+    srcs = ["session.go"],
+    importpath = "github.com/patrickmscott/bazel/lib/session",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_aws_aws_sdk_go//aws",
+        "@com_github_aws_aws_sdk_go//aws/credentials",
+        "@com_github_aws_aws_sdk_go//aws/endpoints",
+        "@com_github_aws_aws_sdk_go//aws/session",
+    ],
+)

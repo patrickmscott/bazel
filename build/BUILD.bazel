@@ -1,0 +1,26 @@
+load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier", "buildifier_test")
+
+gazelle(
+    name = "gazelle",
+)
+
+buildifier_test(
+    name = "buildifier_test",
+    size = "small",
+    diff_command = "diff -u",
+    mode = "diff",
+    no_sandbox = True,
+    workspace = "//:WORKSPACE",
+)
+
+buildifier(
+    name = "buildifier",
+    lint_mode = "fix",
+    mode = "fix",
+)
+
+sh_binary(
+    name = "codegen",
+    srcs = ["codegen.sh"],
+)
