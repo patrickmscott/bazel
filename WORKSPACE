@@ -113,3 +113,37 @@ http_archive(
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
+
+#######
+# Tools
+#######
+
+# XXX: Replace `http_file` with our custom `tool` rule. `http_file` is part of
+# bazel_tools but only supports a single downloaded file. Our tools may be
+# archives, binaries, or dmg files. The main reason we do this hack is so that
+# renovate can update these dependencies when there are updates. Renovate knows
+# about `http_file` and `http_archive` so our custom rule _looks_ like
+# `http_file` but can support other types of downloads.
+load("//build/rules:tools.bzl", http_file = "tool")
+
+# shfmt
+http_file(
+    name = "shfmt_darwin_arm64",
+    downloaded_file_path = "shfmt",
+    sha256 = "633f242246ee0a866c5f5df25cbf61b6af0d5e143555aca32950059cf13d91e0",
+    urls = ["https://github.com/mvdan/sh/releases/download/v3.6.0/shfmt_v3.6.0_darwin_arm64"],
+)
+
+http_file(
+    name = "shfmt_darwin_amd64",
+    downloaded_file_path = "shfmt",
+    sha256 = "b8c9c025b498e2816b62f0b717f6032e9ab49e725a45b8205f52f66318f17185",
+    urls = ["https://github.com/mvdan/sh/releases/download/v3.6.0/shfmt_v3.6.0_darwin_amd64"],
+)
+
+http_file(
+    name = "shfmt_linux_amd64",
+    downloaded_file_path = "shfmt",
+    sha256 = "5741a02a641de7e56b8da170e71a97e58050d66a3cf485fb268d6a5a8bb74afb",
+    urls = ["https://github.com/mvdan/sh/releases/download/v3.6.0/shfmt_v3.6.0_linux_amd64"],
+)

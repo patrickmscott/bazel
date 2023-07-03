@@ -3,7 +3,6 @@
 import os
 import platform
 import re
-import shutil
 import subprocess
 import sys
 import urllib.request
@@ -26,8 +25,9 @@ def install(dest: str) -> None:
 
 
 def main():
-    # Find the root of the bazel workspace. This is to ensure bazelisk is installed to a single
-    # location. Not using chdir so we can keep the current directory when running bazel.
+    # Find the root of the bazel workspace. This is to ensure bazelisk is installed to a
+    # single location. Not using chdir so we can keep the current directory when running
+    # bazel.
     root = os.path.abspath(".")
     while not os.path.exists(os.path.join(root, "WORKSPACE")):
         if root == "/":

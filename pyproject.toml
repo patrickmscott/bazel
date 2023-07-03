@@ -1,0 +1,29 @@
+[tool.black]
+# The default exclusion regex includes build which is valid for this repo
+exclude = '\.git'
+
+[tool.isort]
+profile = "black"
+
+[tool.pylint.main]
+disable = [
+  "broad-except",
+  "c-extension-no-member",
+  "fixme",
+  # Imports do not work outside of bazel. Tests should cover the majority of
+  # import issues.
+  "import-error",
+  "missing-docstring",
+  "no-name-in-module",
+  "no-value-for-parameter",
+  "too-few-public-methods",
+  "too-many-arguments",
+  "too-many-branches",
+  "too-many-locals",
+  "too-many-statements",
+  "unspecified-encoding",
+  "use-dict-literal",
+]
+
+[tool.pylint.format]
+max-line-length = 88

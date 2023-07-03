@@ -1,0 +1,41 @@
+load("//build/rules:tools.bzl", "host_tool", "run_with_args")
+load("@pip//:requirements.bzl", "entry_point")
+
+package(default_visibility = ["//visibility:public"])
+
+host_tool(name = "shfmt")
+
+linters = [
+    ":sh",
+    ":python",
+]
+
+sh_binary(
+    name = "lint",
+    srcs = ["lint_all.sh"],
+    args = ["$(rootpath %s)" % linter for linter in linters],
+    data = linters,
+    deps = ["@bazel_tools//tools/bash/runfiles"],
+)
+
+run_with_args(
+    name = "sh",
+    arguments = [
+        "$(rootpath :shfmt)",
+    ],
+    tool = ":shfmt.sh",
+    tools = [":shfmt"],
+)
+
+py_linters = [
+    entry_point("black"),
+    entry_point("pylint"),
+    entry_point("isort"),
+]
+
+run_with_args(
+    name = "python",
+    arguments = ["$(rootpath {})".format(l) for l in py_linters],
+    tool = ":python.sh",
+    tools = py_linters,
+)

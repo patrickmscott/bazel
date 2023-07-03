@@ -57,7 +57,6 @@ nogo(
 compile_pip_requirements(
     name = "requirements",
     timeout = "long",
-    extra_args = ["--upgrade"],
     requirements_in = "requirements.in",
     requirements_txt = "requirements.txt",
 )
