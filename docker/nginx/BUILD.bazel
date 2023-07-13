@@ -1,0 +1,32 @@
+load("//build/rules:docker.bzl", "dockerfile_image", "image")
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+
+dockerfile_image(
+    name = "nginx",
+    data = glob(["*"]),
+    dockerfile = ":Dockerfile",
+)
+
+pkg_tar(
+    name = "example",
+    srcs = ["//cmd"],
+    package_dir = "/usr/local/bin",
+)
+
+# This produces several targets to make things a bit easier:
+# 1. name.oci      The OCI image layout
+# 2. name.tar      A tarball suitable for loading into docker
+# 3. name          An executable that will run the docker image. --no-run will
+#                  only load it.
+# 4. name.digest   The image digest as a file.
+#
+#
+# bazel run docker/nginx:image -- -v should print the nginx version
+# bazel build docker/nginx:image.digest produces a digest file that can be
+# consumed by other targets (perhaps pipelines that update k8s images).
+image(
+    name = "image",
+    base = ":nginx",
+    entrypoint = ["nginx"],
+    tars = [":example"],
+)
